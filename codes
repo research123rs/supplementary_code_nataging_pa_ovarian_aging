@@ -1,0 +1,453 @@
+# Figure 1 The associations between PA and menopause risk ----------------------------------------------------------------
+# library packages ----------------------------------------------------------------
+library(rms)
+library(survival)
+library(survminer)
+library(ggplot2)
+library(ggpubr)
+
+# Figure 1a--------------------------------------------------------------------
+dd <-datadist(FullSample.Imputed)
+options(datadist='dd')
+dd$limits$PA.MET[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET, 4), data=FullSample.Imputed)
+HR.agesex <-Predict(fit.agesex, PA.MET, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.MET, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.MET, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.MET, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.MET, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(1, 3000), breaks=c(1, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1b --------------------------------------------------------------------
+dd <-datadist(FullSample.Imputed)
+options(datadist='dd')
+dd$limits$PA.min[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min, 4), data=FullSample.Imputed)
+HR.agesex <-Predict(fit.agesex, PA.min, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.min, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.min, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.min, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.min, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(1, 3000), breaks=c(1, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+
+# Figure 1c --------------------------------------------------------------------
+dd <-datadist(CompleteSample)
+options(datadist='dd')
+dd$limits$PA.MET[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET, 4), data=CompleteSample)
+HR.agesex <-Predict(fit.agesex, PA.MET, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=CompleteSample)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.MET, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.MET, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.MET, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.MET, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1d --------------------------------------------------------------------
+dd <-datadist(CompleteSample)
+options(datadist='dd')
+dd$limits$PA.min[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min, 4), data=CompleteSample)
+HR.agesex <-Predict(fit.agesex, PA.min, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=CompleteSample)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.min, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.min, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.min, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.min, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1e --------------------------------------------------------------------
+dd <-datadist(FullSample.Imputed)
+options(datadist='dd')
+dd$limits$PA.MET[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET, 4), data=HRT.Imputed)
+HR.agesex <-Predict(fit.agesex, PA.MET, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont + comtherapy, data=HRT.Imputed)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.MET, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.MET, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.MET, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.MET, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1f --------------------------------------------------------------------
+dd <-datadist(FullSample.Imputed)
+options(datadist='dd')
+dd$limits$PA.min[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min, 4), data=HRT.Imputed)
+HR.agesex <-Predict(fit.agesex, PA.min, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont + comtherapy, data=HRT.Imputed)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.min, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.min, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.min, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.min, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1g --------------------------------------------
+dd <-datadist(FullSample.Imputed.DH)
+options(datadist='dd')
+dd$limits$PA.MET[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET, 4), data=FullSample.Imputed.DH)
+HR.agesex <-Predict(fit.agesex, PA.MET, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed.DH)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.MET, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.MET, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.MET, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.MET, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+# Figure 1h --------------------------------------------
+dd <-datadist(FullSample.Imputed.DH)
+options(datadist='dd')
+dd$limits$PA.min[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min, 4), data=FullSample.Imputed.DH)
+HR.agesex <-Predict(fit.agesex, PA.min, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed.DH)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.min, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.min, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.min, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.min, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+# Figure 1i ---------------------------------------------
+dd <-datadist(FullSample.Imputed4060)
+options(datadist='dd')
+dd$limits$PA.MET[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET, 4), data=FullSample.Imputed4060)
+HR.agesex <-Predict(fit.agesex, PA.MET, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.MET,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed4060)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.MET, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.MET, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.MET, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.MET, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+# Figure 1j ---------------------------------------------
+dd <-datadist(FullSample.Imputed4060)
+options(datadist='dd')
+dd$limits$PA.min[2] <- 0
+
+fit.agesex <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min, 4), data=FullSample.Imputed4060)
+HR.agesex <-Predict(fit.agesex, PA.min, fun=exp, ref.zero = TRUE)
+
+fit.agesexOthers <- cph(Surv(Age.at.menopause.censor, menopause.status) ~ rcs(PA.min,4) + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data=FullSample.Imputed4060)
+HR.agesexOthers <-Predict(fit.agesexOthers, PA.min, fun=exp, ref.zero = TRUE)
+
+ggplot()+geom_line(data=HR.agesex,aes(PA.min, yhat, linetype=" "), size=1)+
+  geom_line(data = HR.agesexOthers,aes(PA.min, yhat,linetype = ""), size=1)+
+  theme(legend.title = element_text(size=16, face="bold"),legend.direction = "vertical",
+        legend.position=c(0.5, 0.9), text = element_text(size=12)) + 
+  scale_linetype_manual(name="", breaks=c(" ",""), values=c("dashed","solid"))+
+  geom_ribbon(data = HR.agesexOthers, aes(PA.min, ymin = lower, ymax = upper),alpha = 0.5,fill="#71d4fc")+
+  labs(x="Daily MET minutes",y="Adjusted HR for menopause")+
+  scale_x_continuous(limits = c(0, 3000), breaks=c(0, 1000, 2000, 3000))+geom_hline(yintercept=1,linetype=1,size=1,colour="black")+
+  scale_y_continuous(limits = c(0.80, 1.05),breaks = c(0.85, 0.9, 0.95, 1.0, 1.05))+
+  theme_pubr(base_size = 18,legend=c(0.6, 1))
+
+anova(fit.agesexOthers)
+
+
+
+# Supplementary Figure 2. The missing data pattern of the covariates --------
+library(VIM)
+data <- data.NOTimputed[,c('PA.MET', 'menopause.status',  'Age.at.menopause.censor', 'ethnic.white21000.2gp', 'townsend.deprivation.index189', 'assessment.centre54', 'Education_FULL',  'BMI', 'Smoke','totalbirths', 'menarche','oral_cont', 'Alcohol')]
+
+par(mfrow=c(1,2))
+data <- data.NOTimputed[,c( 'ethnic.white21000.2gp', 'townsend.deprivation.index189', 'assessment.centre54', 'Education_FULL',  'BMI', 'Smoke','totalbirths', 'menarche','oral_cont', 'Alcohol')]
+
+# generate the plots
+mice_plot <- aggr(data, col=c('navyblue','red'),
+                  labels=names(data), 
+                  numbers=T, sortVars=T,
+                  cex.axis=0.2,
+                  gap=3, ylab=c("Missing data","Pattern"))
+
+
+# obtain the frequency data
+frequency_data <- mice_plot$count
+
+
+
+# Supplementary Figure 4. Scaled Schoenfeld residual plots for men --------
+#cox regression
+cox<- coxph(Surv(Age.at.menopause.censor, menopause.status) ~ PA.MET.4gp + ethnic.white21000.2gp + townsend.deprivation.index189 + assessment.centre54 + Education_FULL + BMI.categories + Smoke + Alcohol + totalbirths.2gp + menarche.2gp + oral_cont, data = FullSample.Imputed46)
+# Displays a graph of the scaled Schoenfeld residuals, along with a smooth curve using ggplot2. Wrapper around plot.cox.zph. schoenfeld residuals.
+zph1 <- cox.zph(cox)
+ggcoxzph(zph1, 
+         var = 1,
+         font.main = 16,
+         resid = TRUE,
+         se = TRUE,
+         nsmo = 40,
+         point.col = "#2e9ac1",
+         point.size = 0.8,
+         point.shape = 19,
+         point.alpha = 0.18,
+         caption = NULL,
+         ggtheme = theme_survminer())
+
+
+# Supplementary Figure 5 Feature importance of nine different predictors for menopause risk was ranked using SHAP additive explanations in a Cox model--------------------------------------------------
+
+# use R packages --------------------------------------------------------------
+library(xgboost)
+library(survival)
+library(mice)
+library(SHAPforxgboost)
+library(ggplot2)
+library(data.table)
+library(here)
+library(sjmisc)
+
+# read the dataset --------------------------------------------------------
+data <- readRDS('./ImputedData.rds')
+
+# choose the variables ----------------------------------------------------
+data <- data[,c('menopause.status12',
+                'Age.at.menopause.censor',
+                'PA.MET.2gp',
+                'X22034.0.02gp',
+                'ethnic.white21000.2gp',
+                'townsend.deprivation.index189',
+                'assessment.centre54',
+                'Education_FULL',
+                'BMI.categories',
+                'Smoke',
+                'Alcohol',
+                'totalbirths.2gp',
+                'menarche.2gp',
+                'oral_cont')]
+
+# Select the variables for modeling --------------------------------------------
+col_list<-c('PA.MET.2gp',
+            'X22034.0.02gp',
+            'ethnic.white21000.2gp',
+            'townsend.deprivation.index189',
+            'assessment.centre54',
+            'Education_FULL',
+            'BMI.categories',
+            'Smoke',
+            'Alcohol',
+            'totalbirths.2gp',
+            'menarche.2gp',
+            'oral_cont')
+
+# The standard names of the variables for modeling --------------------------------------------
+x_list<-c('Longer MET minutes',
+          'Longer PA minutes',
+          'Ethnicity',
+          'Townsend deprivation index',
+          'Assessment centre',
+          'Education level',
+          'BMI categories',
+          'Smoking status',
+          'Alcohol consumption',
+          'Higher total births',
+          'Advanced mnarche',
+          'Oral contraceptive')
+
+# Select the variables to compare -----------------------------------------
+selected_list<-c('Longer MET minutes',
+                 'Longer PA minutes',
+                 'Ethnicity',
+                 'BMI categories',
+                 'Smoking status',
+                 'Alcohol consumption',
+                 'Higher total births',
+                 'Advanced mnarche',
+                 'Oral contraceptive')
+
+#Select the outcome variables Time and Status, noting that the first is Time, and the second is Status.
+y_list<-c('Age.at.menopause.censor','menopause.status12')
+
+# Construct the data for modeling -----------------------------------------
+df<-data[,col_list]
+colnames(df)<-x_list
+df<-cbind(df,data[,y_list])
+df<-na.omit(df)
+row.names(df) <- NULL
+
+#Select the independent variables and dependent variables -----------------------------------------
+df_x<-as.matrix(df[x_list])
+df_y<-as.matrix(ifelse(df[,y_list[2]] == 2, df[,y_list[1]], -df[,y_list[1]])) 
+df_y <- as.matrix(df_y)
+
+#Parameter settings for xgboost -----------------------------------------
+param_list <- list(objective = "survival:cox", 
+                   eta = 0.02,max_depth = 10,
+                   gamma = 0.01,subsample = 0.95)
+
+
+
+# Use cross-validation to find the optimal number of iterations -----------------------------------------
+cv_results <- xgb.cv(
+  params = param_list,
+  data = df_x,
+  label = df_y,
+  nfold = 10,
+  nrounds = 1000,
+  early_stopping_rounds = 10,
+  maximize = FALSE,
+  verbose = 0
+)
+
+# Define the optimal number of iterations ---------------------------------
+best_nrounds <- cv_results$best_iteration
+
+# Use the optimal number of iterations to train the final model. ----------
+model <- xgboost::xgboost(
+  data = df_x,
+  label = df_y,
+  params = param_list,
+  nrounds = best_nrounds,
+  verbose = FALSE,
+  nthread = parallel::detectCores() - 1
+)
+name<-'Age at menopause'
+
+
+# Obtain the feature importance in the model. -----------------------------
+xgb_imp <- xgb.importance(model = model)
+xgb_imp <- xgb_imp[which(xgb_imp$Feature %in% selected_list),]
+xgb_imp$Feature<-factor(xgb_imp$Feature,
+                        levels=unique(xgb_imp$Feature[order(xgb_imp$Gain)]), ordered=TRUE)
+
+# Plot the feature importance ---------------------------------------------
+p1<-ggplot(xgb_imp, aes(x = Feature, y = Gain)) + 
+  geom_bar(stat = "identity", fill = '#4169E1') + 
+  coord_flip() + scale_x_discrete(limits = levels(xgb_imp[["Feature"]])) + 
+  theme_bw() + theme(axis.title.x = element_text(size = 10)) + 
+  labs(x = element_blank(), y = "Feature importance")+
+  ggtitle(name)+theme(plot.title = element_text(hjust = 0.5,size = 10))
+ggsave(plot=p1, filename=paste("./res_figure/",name,'_imp.jpeg',sep = ''),
+       width = 8,height = 6,dpi=800)
+p1
+
+shap_values <- shap.values(xgb_model = model, X_train = df_x)
+shap_long <- shap.prep(shap_contrib =shap_values$shap_score,X_train = df_x)
+for (i in x_list) {
+  if (!(i %in% selected_list)) {
+    levels(shap_long$variable)[levels(shap_long$variable) == i] <- NA
+  }
+}
+shap_long<- shap_long[c(which(shap_long$variable %in% selected_list)),]
+
+p2<-shap.plot.summary(shap_long,dilute = 20,max_color_bound='#4169E1',kind='bar')+
+  ggtitle(name)+theme(plot.title = element_text(hjust = 0.5,size = 10))
+ggsave(plot=p2, filename=paste("./res_figure/",name,'_bar.jpeg',sep = ''),
+       width = 8,height = 6,dpi=800)
+p2
+
+p3<-shap.plot.summary(shap_long,dilute = 20,min_color_bound='#4169E1',max_color_bound='#FF3E96',kind='sina')+
+  ggtitle(name)+theme(plot.title = element_text(hjust = 0.5,size = 10))
+ggsave(plot=p3, filename=paste("./res_figure/",name,'_sina.jpeg',sep = ''),
+       width = 8,height = 6,dpi=800)
+p3
